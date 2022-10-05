@@ -30,22 +30,24 @@ public class SelectionController : MonoBehaviour
             
     }
 
-
     // Update is called once per frame
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
             mouseStartPos = Input.mousePosition;
+        }
 
+        if (Input.GetMouseButtonUp(0))
+        {
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit))
             {
                 var selection = hit.transform;
-                if(selection.CompareTag("Selectable") == true)
+                if (selection.CompareTag("Selectable") == true)
                 {
-                     selected = selection.GetComponent<Selected>();
+                    selected = selection.GetComponent<Selected>();
                     if (!selected)
                     {
                         for (int i = 0; i < cubesScripts.Length; i++)
@@ -56,14 +58,12 @@ public class SelectionController : MonoBehaviour
 
                     if (selection != null)
                     {
-                        if (selected.isSelected)
+                        for (int i = 0; i < cubesScripts.Length; i++)
                         {
-                            selected.isSelected = false;
+                            cubesScripts[i].isSelected = false;
                         }
-                        else
-                        {
-                            selected.isSelected = true;
-                        }
+                        selected.isSelected = true;
+
                     }
                     else
                     {
@@ -78,10 +78,7 @@ public class SelectionController : MonoBehaviour
                     }
                 }
             }
-        }
 
-        if (Input.GetMouseButtonUp(0))
-        {
             ReleaseSelectionBox();
         }
 
