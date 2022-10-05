@@ -11,6 +11,7 @@ public class SelectionController : MonoBehaviour
     public Camera mainCamera;
 
     public GameObject[] cubes;
+    public Selected[] cubesScripts;
 
     public Selected selected;
     public int numberOfCubes;
@@ -20,13 +21,21 @@ public class SelectionController : MonoBehaviour
     {
         cubes = GameObject.FindGameObjectsWithTag("Selectable");
         numberOfCubes = cubes.Length;
+
+        cubesScripts = new Selected[cubes.Length];
+
+        for (int i = 0; i < numberOfCubes; i++)
+        {
+            cubesScripts[i] = cubes[i].GetComponent<Selected>();
+        }
     }
+
 
     // Update is called once per frame
     void Update()
     {
-       if (Input.GetMouseButtonDown(0))
-       {
+        if (Input.GetMouseButtonDown(0))
+        {
             mouseStartPos = Input.mousePosition;
 
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
@@ -41,7 +50,7 @@ public class SelectionController : MonoBehaviour
                     {
                         for (int i = 0; i < numberOfCubes; i++)
                         {
-                            cubes[i].GetComponent<Selected>().isSelected = false;
+                            cubesScripts[i].isSelected = false;
                         }
                     }
 
@@ -65,11 +74,11 @@ public class SelectionController : MonoBehaviour
                 {
                     for (int i = 0; i < numberOfCubes; i++)
                     {
-                        cubes[i].GetComponent<Selected>().isSelected = false;
+                        cubesScripts[i].isSelected = false;
                     }
                 }
             }
-       }
+        }
 
         if (Input.GetMouseButtonUp(0))
         {
@@ -109,7 +118,7 @@ public class SelectionController : MonoBehaviour
 
             if (screenPos.x > min.x && screenPos.x < max.x && screenPos.y > min.y && screenPos.y < max.y)
             {
-                cubes[i].GetComponent<Selected>().isSelected = true;
+                cubesScripts[i].isSelected = true;
             }
         }
     }
