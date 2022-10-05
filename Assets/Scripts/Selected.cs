@@ -40,10 +40,4 @@ public class Selected : MonoBehaviour
             material.color = Color.red;
         }
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
