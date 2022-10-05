@@ -200,7 +200,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 662a924ab3eed684ba9c1c6e6a532725, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isSelected: 0
 --- !u!65 &143967573
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -566,7 +565,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 662a924ab3eed684ba9c1c6e6a532725, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isSelected: 0
 --- !u!65 &372665480
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -675,7 +673,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 662a924ab3eed684ba9c1c6e6a532725, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isSelected: 0
 --- !u!65 &448350126
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -770,8 +767,14 @@ MonoBehaviour:
   selectionBox: {fileID: 902220172}
   mainCamera: {fileID: 190515006}
   cubes: []
+  cubesScripts:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   selected: {fileID: 0}
-  numberOfCubes: 5
+  numberOfCubes: 3
 --- !u!4 &556825141
 Transform:
   m_ObjectHideFlags: 0
@@ -1007,7 +1010,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 662a924ab3eed684ba9c1c6e6a532725, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isSelected: 0
 --- !u!65 &942944500
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1572,7 +1574,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 662a924ab3eed684ba9c1c6e6a532725, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isSelected: 0
 --- !u!65 &2089233029
 BoxCollider:
   m_ObjectHideFlags: 0

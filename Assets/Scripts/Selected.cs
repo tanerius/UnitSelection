@@ -4,7 +4,19 @@ using UnityEngine;
 
 public class Selected : MonoBehaviour
 {
-    public bool isSelected = false;
+    public bool isSelected
+    {
+        set
+        {
+            ToggleSelected(value);
+        }
+        get
+        {
+            return m_isSelected;
+        }
+
+    }
+    private bool m_isSelected = false;
     
     Material material;
     Renderer ren;
@@ -16,10 +28,10 @@ public class Selected : MonoBehaviour
         material = ren.material;
     }
 
-    // Update is called once per frame
-    void Update()
+    void ToggleSelected(bool curValue)
     {
-        if (isSelected)
+        m_isSelected = curValue;
+        if (curValue)
         {
             material.color = Color.green;
         }
