@@ -15,7 +15,6 @@ public class Thruster : MonoBehaviour
     private float m_zPos;
     public LayerMask layerMask;
 
-
     public bool xView;
     public bool yView;
     public bool zView;
@@ -24,10 +23,7 @@ public class Thruster : MonoBehaviour
     public GameObject bgY;
     public GameObject bgZ;
 
-   
-
     public GameObject nearestObject;
-
 
     // Start is called before the first frame update
     void Start()
