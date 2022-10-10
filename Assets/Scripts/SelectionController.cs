@@ -71,7 +71,7 @@ public class SelectionController : MonoBehaviour
             bgY.SetActive(false);
             bgZ.SetActive(false);
         }
-        if (y)
+        else if (y)
         {
             for (int i = 0; i < cubesScripts.Length; i++)
             {
@@ -84,7 +84,7 @@ public class SelectionController : MonoBehaviour
             bgX.SetActive(false);
             bgZ.SetActive(false);
         }
-        if (z)
+        else if (z)
         {
             for (int i = 0; i < cubesScripts.Length; i++)
             {
@@ -121,6 +121,10 @@ public class SelectionController : MonoBehaviour
 
         if (Input.GetMouseButtonUp(0))
         {
+            bgX.SetActive(false);
+            bgY.SetActive(false);
+            bgZ.SetActive(false);
+
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit))
