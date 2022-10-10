@@ -43,6 +43,22 @@ public class Thruster : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (nearestObject != null)
+        {
+            if (xView)
+            {
+                bgX.transform.position = new Vector3(nearestObject.transform.position.x, transform.position.y, transform.position.z);
+            }
+            if (yView)
+            {
+                bgY.transform.position = new Vector3(transform.position.x, nearestObject.transform.position.y, transform.position.z);
+            }
+            if (zView)
+            {
+                bgZ.transform.position = new Vector3(transform.position.x, transform.position.y, nearestObject.transform.position.z);
+            }
+        }
+        
         if (m_selected.isSelected && Input.GetMouseButtonDown(1))
         {
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
@@ -62,8 +78,6 @@ public class Thruster : MonoBehaviour
                 {
                     m_zPos = transform.position.z;
                     m_targetPos = new Vector3(hit.point.x, hit.point.y, m_zPos);
-
-                    bgZ.transform.position = new Vector3(transform.position.x, transform.position.y, nearestObject.transform.position.z);
                 }
             }
             else
@@ -71,6 +85,7 @@ public class Thruster : MonoBehaviour
                 m_targetPos = mainCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, m_zPos));
             }
         }
+
         if(xView)
         {
             transform.position = new Vector3(m_xPos, transform.position.y, transform.position.z);

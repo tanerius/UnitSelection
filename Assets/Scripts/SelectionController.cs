@@ -57,6 +57,63 @@ public class SelectionController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (x)
+        {
+            for (int i = 0; i < cubesScripts.Length; i++)
+            {
+                thrusterScripts[i].xView = true;
+                thrusterScripts[i].yView = false;
+                thrusterScripts[i].zView = false;
+            }
+
+
+            bgX.SetActive(true);
+            bgY.SetActive(false);
+            bgZ.SetActive(false);
+        }
+        if (y)
+        {
+            for (int i = 0; i < cubesScripts.Length; i++)
+            {
+                thrusterScripts[i].yView = true;
+                thrusterScripts[i].xView = false;
+                thrusterScripts[i].zView = false;
+            }
+
+            bgY.SetActive(true);
+            bgX.SetActive(false);
+            bgZ.SetActive(false);
+        }
+        if (z)
+        {
+            for (int i = 0; i < cubesScripts.Length; i++)
+            {
+                thrusterScripts[i].zView = true;
+                thrusterScripts[i].xView = false;
+                thrusterScripts[i].yView = false;
+            }
+
+            bgZ.SetActive(true);
+            bgX.SetActive(false);
+            bgY.SetActive(false);
+        }
+
+        FindNearestObject();
+
+        for (int i = 0; i < cubesScripts.Length; i++)
+        {
+            thrusterScripts[i].nearestObject = nearestObject;
+            if (cubesScripts[i].isSelected)
+            {
+                activeCubes[i] = cubes[i];
+            }
+            else
+            {
+                activeCubes[i] = null;
+            }
+        }
+
+
         if (Input.GetMouseButtonDown(0))
         {
             mouseStartPos = Input.mousePosition;
@@ -117,64 +174,6 @@ public class SelectionController : MonoBehaviour
         {
             UpdateSelectionBox(Input.mousePosition);
         }
-
-
-        if(x)
-        {
-            for (int i = 0; i < cubesScripts.Length; i++)
-            {
-                thrusterScripts[i].xView = true;
-                thrusterScripts[i].yView = false;
-                thrusterScripts[i].zView = false;
-            }
-            
-
-            bgX.SetActive(true);
-            bgY.SetActive(false);
-            bgZ.SetActive(false);
-        }
-        if (y)
-        {
-            for (int i = 0; i < cubesScripts.Length; i++)
-            {
-                thrusterScripts[i].yView = true;
-                thrusterScripts[i].xView = false;
-                thrusterScripts[i].zView = false;
-            }
-
-            bgY.SetActive(true);
-            bgX.SetActive(false);
-            bgZ.SetActive(false);
-        }
-        if (z)
-        {
-            for (int i = 0; i < cubesScripts.Length; i++)
-            {
-                thrusterScripts[i].zView = true;
-                thrusterScripts[i].xView = false;
-                thrusterScripts[i].yView = false;
-            }
-
-            bgZ.SetActive(true);
-            bgX.SetActive(false);
-            bgY.SetActive(false);
-        }
-
-        for (int i = 0; i < cubesScripts.Length; i++)
-        {
-            thrusterScripts[i].nearestObject = nearestObject;
-            if(cubesScripts[i].isSelected)
-            {
-                activeCubes[i] = cubes[i];
-            } else
-            {
-                activeCubes[i] = null;
-            }
-        }
-
-
-        FindNearestObject();
-
     }
 
     void UpdateSelectionBox(Vector3 curMousePos)
@@ -225,8 +224,6 @@ public class SelectionController : MonoBehaviour
                     nearestObject = curObject;
                 }
             }
-            
-            
         }
     }
 }
