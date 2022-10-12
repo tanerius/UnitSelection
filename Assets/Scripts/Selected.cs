@@ -33,11 +33,11 @@ public class Selected : MonoBehaviour
         m_isSelected = curValue;
         if (curValue)
         {
-            material.color = Color.green;
+            material.color = Color.cyan;
         }
         else
         {
-            material.color = Color.red;
+            material.color = Color.white;
         }
     }
 }
