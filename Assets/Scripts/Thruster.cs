@@ -15,6 +15,8 @@ public class Thruster : MonoBehaviour
     private float m_zPos;
     public LayerMask layerMask;
 
+    public float m_rotationSpeed;
+
     public bool xView;
     public bool yView;
     public bool zView;
@@ -25,6 +27,12 @@ public class Thruster : MonoBehaviour
 
     public GameObject nearestObject;
 
+    public Vector3 startPos;
+    public float startRotY;
+
+    public Vector3 rotPos;
+    public bool rotationDone = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -34,6 +42,8 @@ public class Thruster : MonoBehaviour
         m_yPos = gameObject.transform.position.y;
         m_zPos = gameObject.transform.position.z;
         m_rb = GetComponent<Rigidbody>();
+
+        rotationDone = false;
     }
 
     // Update is called once per frame
@@ -54,13 +64,17 @@ public class Thruster : MonoBehaviour
                 bgZ.transform.position = new Vector3(transform.position.x, transform.position.y, nearestObject.transform.position.z);
             }
         }
-        
+
         if (m_selected.isSelected && Input.GetMouseButtonDown(1))
         {
+            startPos = transform.position;
+            startRotY = transform.eulerAngles.y;
+            rotationDone = false;
+
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit, float.MaxValue, layerMask))
             {
-                if(xView)
+                if (xView)
                 {
                     m_xPos = transform.position.x;
                     m_targetPos = new Vector3(m_xPos, hit.point.y, hit.point.z);
@@ -81,19 +95,190 @@ public class Thruster : MonoBehaviour
                 m_targetPos = mainCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, m_zPos));
             }
         }
+        
+        if ((m_targetPos - transform.position).normalized != Vector3.zero)
+        {
+            
+            if (xView)
+            {
+                if (startPos.z < m_targetPos.z && startRotY < 135)
+                {
+                    transform.rotation = Quaternion.Slerp(transform.rotation, (Quaternion.Euler(0, 0, 0)), m_rotationSpeed * Time.deltaTime);
+                    transform.position = Vector3.Lerp(transform.position, m_targetPos, m_lerpSpeed * Time.deltaTime);
 
-        if(xView)
-        {
-            transform.position = new Vector3(m_xPos, transform.position.y, transform.position.z);
+                    if (Vector3.Distance(transform.position, m_targetPos) > ((Vector3.Distance(startPos, m_targetPos)) / 4))
+                    {
+                        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation((m_targetPos - transform.position).normalized), Time.deltaTime * m_rotationSpeed);
+                        transform.position = Vector3.Lerp(transform.position, m_targetPos, m_lerpSpeed * Time.deltaTime);
+                    }
+                }
+                else if (startPos.z > m_targetPos.z && startRotY > 135)
+                {
+                    transform.rotation = Quaternion.Slerp(transform.rotation, (Quaternion.Euler(0, 180, 0)), m_rotationSpeed * Time.deltaTime);
+                    transform.position = Vector3.Lerp(transform.position, m_targetPos, m_lerpSpeed * Time.deltaTime);
+
+                    if (Vector3.Distance(transform.position, m_targetPos) > ((Vector3.Distance(startPos, m_targetPos)) / 4))
+                    {
+                        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation((m_targetPos - transform.position).normalized), Time.deltaTime * m_rotationSpeed);
+                        transform.position = Vector3.Lerp(transform.position, m_targetPos, m_lerpSpeed * Time.deltaTime);
+                    }
+                }
+                else
+                {
+                    if (startPos.z < m_targetPos.z && startRotY > 135)
+                    {
+                        rotPos = new Vector3(startPos.x, startPos.y + 1.5f, startPos.z);
+
+                        if (transform.position.y < rotPos.y + 1.45f && !rotationDone)
+                        {
+                            transform.RotateAround(rotPos, new Vector3(1, 0, 0), 200 * Time.deltaTime);
+                        }
+                        else
+                        {
+                            rotationDone = true;
+                            transform.position = Vector3.Lerp(transform.position, m_targetPos, m_lerpSpeed * Time.deltaTime);
+                            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 0, 0), 5 * Time.deltaTime);
+                        }
+                    }
+                    else
+                    {
+                        rotPos = new Vector3(startPos.x, startPos.y + 1.5f, startPos.z);
+
+                        if (transform.position.y < rotPos.y + 1.45f && !rotationDone)
+                        {
+                            transform.RotateAround(rotPos, new Vector3(-1, 0, 0), 200 * Time.deltaTime);
+                        }
+                        else
+                        {
+                            rotationDone = true;
+                            transform.position = Vector3.Lerp(transform.position, m_targetPos, m_lerpSpeed * Time.deltaTime);
+                            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 180, 0), 5 * Time.deltaTime);
+                        }
+                    }
+
+                }
+            }
+            if (yView)
+            {
+                if (startPos.x < m_targetPos.x && startRotY < 135)
+                {
+                    transform.rotation = Quaternion.Slerp(transform.rotation, (bgY.transform.rotation * Quaternion.Euler(0, 90, 90)), m_rotationSpeed * Time.deltaTime);
+                    transform.position = Vector3.Lerp(transform.position, m_targetPos, m_lerpSpeed * Time.deltaTime);
+
+                    if (Vector3.Distance(transform.position, m_targetPos) > ((Vector3.Distance(startPos, m_targetPos)) / 4))
+                    {
+                        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation((m_targetPos - transform.position).normalized), Time.deltaTime * m_rotationSpeed);
+                        transform.position = Vector3.Lerp(transform.position, m_targetPos, m_lerpSpeed * Time.deltaTime);
+                    }
+                }
+                else if (startPos.x > m_targetPos.x && startRotY > 135)
+                {
+                    transform.rotation = Quaternion.Slerp(transform.rotation, (bgY.transform.rotation * Quaternion.Euler(0, 270, -90)), m_rotationSpeed * Time.deltaTime);
+                    transform.position = Vector3.Lerp(transform.position, m_targetPos, m_lerpSpeed * Time.deltaTime);
+
+                    if (Vector3.Distance(transform.position, m_targetPos) > ((Vector3.Distance(startPos, m_targetPos)) / 4))
+                    {
+                        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation((m_targetPos - transform.position).normalized), Time.deltaTime * m_rotationSpeed);
+                        transform.position = Vector3.Lerp(transform.position, m_targetPos, m_lerpSpeed * Time.deltaTime);
+                    }
+                }
+                else
+                {
+                    if (startPos.x < m_targetPos.x && startRotY > 135)
+                    {
+                        rotPos = new Vector3(startPos.x, startPos.y + 1.5f, startPos.z);
+
+                        if (transform.position.y < rotPos.y + 1.45f && !rotationDone)
+                        {
+                            transform.RotateAround(rotPos, new Vector3(0, 0, -1), 200 * Time.deltaTime);
+                        }
+                        else
+                        {
+                            rotationDone = true;
+                            transform.position = Vector3.Lerp(transform.position, m_targetPos, m_lerpSpeed * Time.deltaTime);
+
+                            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 90, 0), 5 * Time.deltaTime);
+                        }
+                    }
+                    else
+                    {
+                        rotPos = new Vector3(startPos.x, startPos.y + 1.5f, startPos.z);
+
+                        if (transform.position.y < rotPos.y + 1.45f && !rotationDone)
+                        {
+                            transform.RotateAround(rotPos, new Vector3(0, 0, 1), 200 * Time.deltaTime);
+                        }
+                        else
+                        {
+                            rotationDone = true;
+                            transform.position = Vector3.Lerp(transform.position, m_targetPos, m_lerpSpeed * Time.deltaTime);
+
+                            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 270, 0), 5 * Time.deltaTime);
+                        }
+                    }
+
+                }
+            }
+            if (zView)
+            {
+                if (startPos.x < m_targetPos.x && startRotY < 135)
+                {
+                    transform.rotation = Quaternion.Slerp(transform.rotation, (bgY.transform.rotation * Quaternion.Euler(0, 90, 90)), m_rotationSpeed * Time.deltaTime);
+                    transform.position = Vector3.Lerp(transform.position, m_targetPos, m_lerpSpeed * Time.deltaTime);
+
+                    if (Vector3.Distance(transform.position, m_targetPos) > ((Vector3.Distance(startPos, m_targetPos)) / 4))
+                    {
+                        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation((m_targetPos - transform.position).normalized), Time.deltaTime * m_rotationSpeed);
+                        transform.position = Vector3.Lerp(transform.position, m_targetPos, m_lerpSpeed * Time.deltaTime);
+                    }
+                }
+                else if (startPos.x > m_targetPos.x && startRotY > 135)
+                {
+                    transform.rotation = Quaternion.Slerp(transform.rotation, (bgY.transform.rotation * Quaternion.Euler(0, 270, -90)), m_rotationSpeed * Time.deltaTime);
+                    transform.position = Vector3.Lerp(transform.position, m_targetPos, m_lerpSpeed * Time.deltaTime);
+
+                    if (Vector3.Distance(transform.position, m_targetPos) > ((Vector3.Distance(startPos, m_targetPos)) / 4))
+                    {
+                        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation((m_targetPos - transform.position).normalized), Time.deltaTime * m_rotationSpeed);
+                        transform.position = Vector3.Lerp(transform.position, m_targetPos, m_lerpSpeed * Time.deltaTime);
+                    }
+                }
+                else
+                {
+                    if (startPos.x < m_targetPos.x && startRotY > 135)
+                    {
+                        rotPos = new Vector3(startPos.x, startPos.y + 1.5f, startPos.z);
+
+                        if (transform.position.y < rotPos.y + 1.45f && !rotationDone)
+                        {
+                            transform.RotateAround(rotPos, new Vector3(0, 0, -1), 200 * Time.deltaTime);
+                        }
+                        else
+                        {
+                            rotationDone = true;
+                            transform.position = Vector3.Lerp(transform.position, m_targetPos, m_lerpSpeed * Time.deltaTime);
+
+                            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 90, 0), 5 * Time.deltaTime);
+                        }
+                    }
+                    else
+                    {
+                        rotPos = new Vector3(startPos.x, startPos.y + 1.5f, startPos.z);
+
+                        if (transform.position.y < rotPos.y + 1.45f && !rotationDone)
+                        {
+                            transform.RotateAround(rotPos, new Vector3(0, 0, 1), 200 * Time.deltaTime);
+                        }
+                        else
+                        {
+                            rotationDone = true;
+                            transform.position = Vector3.Lerp(transform.position, m_targetPos, m_lerpSpeed * Time.deltaTime);
+
+                            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 270, 0), 5 * Time.deltaTime);
+                        }
+                    }
+                }
+            }
         }
-        if (yView)
-        {
-            transform.position = new Vector3(transform.position.x, m_yPos, transform.position.z);
-        }
-        if (zView)
-        {
-            transform.position = new Vector3(transform.position.x, transform.position.y, m_zPos);
-        }
-        transform.position = Vector3.Lerp(transform.position, m_targetPos, m_lerpSpeed * Time.deltaTime);
     }
 }
