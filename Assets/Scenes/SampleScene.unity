@@ -573,6 +573,8 @@ MonoBehaviour:
   startRotY: 0
   rotPos: {x: 0, y: 0, z: 0}
   rotationDone: 0
+  rb: {fileID: 0}
+  isMoving: 0
 --- !u!1001 &503787173
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -998,6 +1000,8 @@ MonoBehaviour:
   startRotY: 0
   rotPos: {x: 0, y: 0, z: 0}
   rotationDone: 0
+  rb: {fileID: 0}
+  isMoving: 0
 --- !u!1 &708180504
 GameObject:
   m_ObjectHideFlags: 0
@@ -1166,6 +1170,8 @@ MonoBehaviour:
   startRotY: 0
   rotPos: {x: 0, y: 0, z: 0}
   rotationDone: 0
+  rb: {fileID: 0}
+  isMoving: 0
 --- !u!1001 &900983801
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1365,6 +1371,8 @@ MonoBehaviour:
   startRotY: 0
   rotPos: {x: 0, y: 0, z: 0}
   rotationDone: 0
+  rb: {fileID: 0}
+  isMoving: 0
 --- !u!1 &1142754426
 GameObject:
   m_ObjectHideFlags: 0
@@ -1836,6 +1844,8 @@ MonoBehaviour:
   startRotY: 0
   rotPos: {x: 0, y: 0, z: 0}
   rotationDone: 0
+  rb: {fileID: 0}
+  isMoving: 0
 --- !u!1 &1836513515
 GameObject:
   m_ObjectHideFlags: 0
@@ -1919,6 +1929,8 @@ MonoBehaviour:
   startRotY: 0
   rotPos: {x: 0, y: 0, z: 0}
   rotationDone: 0
+  rb: {fileID: 0}
+  isMoving: 0
 --- !u!114 &1883391541
 MonoBehaviour:
   m_ObjectHideFlags: 0
