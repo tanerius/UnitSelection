@@ -9,10 +9,12 @@ public class Thruster : MonoBehaviour
 
     public float m_lerpSpeed;
     private Vector3 m_targetPos;
+    private Vector3 m_targetPosStored;
     private float m_xPos;
     private float m_yPos;
     private float m_zPos;
     public LayerMask layerMask;
+    public LayerMask layerMask2;
 
     public float m_rotationSpeed;
 
@@ -36,6 +38,7 @@ public class Thruster : MonoBehaviour
     private Vector3 lastPos;
 
     public bool isMoving;
+    public bool uTurn;
 
     // Start is called before the first frame update
     void Start()
@@ -98,9 +101,10 @@ public class Thruster : MonoBehaviour
             {
                 m_targetPos = mainCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, m_zPos));
             }
+            m_targetPosStored = m_targetPos;
         }
 
-        
+
 
         if ((m_targetPos - transform.position).normalized != Vector3.zero && isMoving)
         {
@@ -108,6 +112,8 @@ public class Thruster : MonoBehaviour
             {
                 if (startPos.z < m_targetPos.z && startRotY < 90)
                 {
+                    uTurn = false;
+
                     transform.rotation = Quaternion.Slerp(transform.rotation, (Quaternion.Euler(0, 0, 0)), m_rotationSpeed * Time.deltaTime);
                     transform.position = Vector3.Lerp(transform.position, m_targetPos, m_lerpSpeed * Time.deltaTime);
 
@@ -119,6 +125,8 @@ public class Thruster : MonoBehaviour
                 }
                 else if (startPos.z > m_targetPos.z && startRotY > 90)
                 {
+                    uTurn = false;
+
                     transform.rotation = Quaternion.Slerp(transform.rotation, (Quaternion.Euler(0, 180, 0)), m_rotationSpeed * Time.deltaTime);
                     transform.position = Vector3.Lerp(transform.position, m_targetPos, m_lerpSpeed * Time.deltaTime);
 
@@ -130,6 +138,8 @@ public class Thruster : MonoBehaviour
                 }
                 else
                 {
+                    uTurn = true;
+
                     if (startPos.z < m_targetPos.z && startRotY > 90)
                     {
                         rotPos = new Vector3(startPos.x, startPos.y + 1.5f, startPos.z);
@@ -179,6 +189,8 @@ public class Thruster : MonoBehaviour
             {
                 if (startPos.x < m_targetPos.x && startRotY < 90)
                 {
+                    uTurn = false;
+
                     transform.rotation = Quaternion.Slerp(transform.rotation, (bgY.transform.rotation * Quaternion.Euler(0, 90, 90)), m_rotationSpeed * Time.deltaTime);
                     transform.position = Vector3.Lerp(transform.position, m_targetPos, m_lerpSpeed * Time.deltaTime);
 
@@ -190,6 +202,8 @@ public class Thruster : MonoBehaviour
                 }
                 else if (startPos.x > m_targetPos.x && startRotY > 90)
                 {
+                    uTurn = false;
+
                     transform.rotation = Quaternion.Slerp(transform.rotation, (bgY.transform.rotation * Quaternion.Euler(0, 270, -90)), m_rotationSpeed * Time.deltaTime);
                     transform.position = Vector3.Lerp(transform.position, m_targetPos, m_lerpSpeed * Time.deltaTime);
 
@@ -201,6 +215,8 @@ public class Thruster : MonoBehaviour
                 }
                 else
                 {
+                    uTurn = true;
+
                     if (startPos.x < m_targetPos.x && startRotY > 90)
                     {
                         rotPos = new Vector3(startPos.x, startPos.y + 1.5f, startPos.z);
@@ -273,6 +289,8 @@ public class Thruster : MonoBehaviour
             {
                 if (startPos.x < m_targetPos.x && startRotY < 180)
                 {
+                    uTurn = false;
+
                     transform.rotation = Quaternion.Slerp(transform.rotation, (bgY.transform.rotation * Quaternion.Euler(0, 90, 90)), m_rotationSpeed * Time.deltaTime);
                     transform.position = Vector3.Lerp(transform.position, m_targetPos, m_lerpSpeed * Time.deltaTime);
 
@@ -284,6 +302,8 @@ public class Thruster : MonoBehaviour
                 }
                 else if (startPos.x > m_targetPos.x && startRotY > 180)
                 {
+                    uTurn = false;
+
                     transform.rotation = Quaternion.Slerp(transform.rotation, (bgY.transform.rotation * Quaternion.Euler(0, 270, -90)), m_rotationSpeed * Time.deltaTime);
                     transform.position = Vector3.Lerp(transform.position, m_targetPos, m_lerpSpeed * Time.deltaTime);
 
@@ -295,6 +315,8 @@ public class Thruster : MonoBehaviour
                 }
                 else
                 {
+                    uTurn = true;
+
                     if (startPos.x < m_targetPos.x && startRotY > 180)
                     {
                         rotPos = new Vector3(startPos.x, startPos.y + 1.5f, startPos.z);
@@ -339,6 +361,24 @@ public class Thruster : MonoBehaviour
                     }
                 }
             }
+
+            Ray ray2 = new Ray(transform.position, transform.forward);
+            if (Physics.Raycast(ray2, out RaycastHit hit2, float.MaxValue, layerMask2))
+            {
+                if (hit2.transform.position.y <= transform.position.y)
+                {
+                    m_targetPos.y += 1;
+                }
+                else
+                {
+                    m_targetPos.y -= 1;
+                }
+
+            }
+            else
+            {
+                m_targetPos = m_targetPosStored;
+            }
         }
 
         var curPos = transform.position;
@@ -350,7 +390,7 @@ public class Thruster : MonoBehaviour
         {
             isMoving = true;
 
-            if(Vector3.Distance(curPos, m_targetPos) < 0.05)
+            if (Vector3.Distance(curPos, m_targetPos) < 0.05)
             {
                 transform.position = m_targetPos;
             }
